@@ -29,12 +29,24 @@ class Responsive_Section_Short_Code {
 
         if (is_array($section_value) && array_key_exists('style', $section_value)) {
             //Generate HTML for sections
-            $output .= $this->generate_section_html(unserialize($section_value['section_icon']), unserialize($section_value['section_title']), unserialize($section_value['section_description']), $section_value['style'], $section_value['section']);
+
+            $section_icon = apply_filters('responsive_remove_slashes_to_data_filter', $section_value['section_icon']);
+            $section_title = apply_filters('responsive_remove_slashes_to_data_filter', $section_value['section_title']);
+            $section_description = apply_filters('responsive_remove_slashes_to_data_filter', $section_value['section_description']);
+
+
+            $section_icon_attributes = apply_filters('responsive_remove_slashes_to_data_filter', $section_value['section_icon_attribuites']);
+            $section_title_attributes = apply_filters('responsive_remove_slashes_to_data_filter', $section_value['section_title_attributes']);
+            $section_description_attributes = apply_filters('responsive_remove_slashes_to_data_filter', $section_value['section_description_attributes']);
+
+
+
+            $output .= $this->generate_section_html($section_icon, $section_icon_attributes, $section_title, $section_title_attributes, $section_description, $section_description_attributes, $section_value['style'], $section_value['section']);
         }
         return $output;
     }
 
-    public function generate_section_html($section_icon, $section_title, $section_description, $selected_style, $selected_section) {
+    public function generate_section_html($section_icon, $section_icon_attributes, $section_title, $section_title_attributes, $section_description, $section_description_attributes, $selected_style, $selected_section) {
         $html = '';
         //Get available styles //Default, Style
         $available_styles = apply_filters('responsive_style_filter', false);
@@ -51,18 +63,18 @@ class Responsive_Section_Short_Code {
                     $html .='<div class="col-sm-' . $responsive_class . '">';
 
                     //For Icon
-                    $html .= (isset($available_styles[$selected_style]['icon_wrapper_start']) && $available_styles[$selected_style]['icon_wrapper_start'] != "") ? $available_styles[$selected_style]['icon_wrapper_start'] : '';
-                    $html .= '<i class="' . $section_icon[$i] . '"></i>';
+                    $html .= (isset($available_styles[$selected_style]['icon_wrapper_start']) && $available_styles[$selected_style]['icon_wrapper_start'] != "") ? str_replace("%s%", trim($section_icon_attributes[$i]), $available_styles[$selected_style]['icon_wrapper_start']) : '';
+                    $html .= '<i class="' . trim($section_icon[$i]) . '"></i>';
                     $html .= (isset($available_styles[$selected_style]['icon_wrapper_end']) && $available_styles[$selected_style]['icon_wrapper_end'] != "") ? $available_styles[$selected_style]['icon_wrapper_end'] : '';
 
                     //For Title
-                    $html .= (isset($available_styles[$selected_style]['title_wrapper_start']) && $available_styles[$selected_style]['title_wrapper_start'] != "") ? $available_styles[$selected_style]['title_wrapper_start'] : '';
-                    $html .= $section_title[$i];
+                    $html .= (isset($available_styles[$selected_style]['title_wrapper_start']) && $available_styles[$selected_style]['title_wrapper_start'] != "") ? str_replace("%s%", trim($section_title_attributes[$i]), $available_styles[$selected_style]['title_wrapper_start']) : '';
+                    $html .= trim($section_title[$i]);
                     $html .= (isset($available_styles[$selected_style]['title_wrapper_end']) && $available_styles[$selected_style]['title_wrapper_end'] != "") ? $available_styles[$selected_style]['title_wrapper_end'] : '';
 
                     //For description
-                    $html .= (isset($available_styles[$selected_style]['content_wrapper_start']) && $available_styles[$selected_style]['content_wrapper_start'] != "") ? $available_styles[$selected_style]['content_wrapper_start'] : '';
-                    $html .= $section_description[$i];
+                    $html .= (isset($available_styles[$selected_style]['content_wrapper_start']) && $available_styles[$selected_style]['content_wrapper_start'] != "") ? str_replace("%s%", trim($section_description_attributes[$i]), $available_styles[$selected_style]['content_wrapper_start']) : '';
+                    $html .= trim($section_description[$i]);
                     $html .= (isset($available_styles[$selected_style]['content_wrapper_end']) && $available_styles[$selected_style]['content_wrapper_end'] != "") ? $available_styles[$selected_style]['content_wrapper_end'] : '';
 
                     $html .='</div>';

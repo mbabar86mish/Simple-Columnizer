@@ -36,11 +36,11 @@ Ans.
 			'style 2' => array(
 				'container_wrapper_start' => '<div class="row-example">',
 				'container_wrapper_end' => '</div>',
-				'icon_wrapper_start' => '<span>',
+				'icon_wrapper_start' => '<span %s%>',
 				'icon_wrapper_end' => '</span>',
-				'title_wrapper_start' => '<h3>',
+				'title_wrapper_start' => '<h3 %s%>',
 				'title_wrapper_end' => '</h3>',
-				'content_wrapper_start' => '<p>',
+				'content_wrapper_start' => '<p %s%>',
 				'content_wrapper_end' => '</p>'
 			)
 		);

@@ -14,6 +14,9 @@ class Responsive_Section_Generator_Widget extends WP_Widget {
                 __('Responsive Section', 'responsive-section-generator-locale'), // Name
                 array('description' => __('A Responsive section generator', 'responsive-section-generator-locale'),) // Args
         );
+
+        //Filter to remove slashes 
+        add_filter('responsive_remove_slashes_to_data_filter', array($this, 'remove_slashes_to_data_func'));
     }
 
     /**
@@ -70,6 +73,10 @@ class Responsive_Section_Generator_Widget extends WP_Widget {
 
 
         /* Section */
+
+//        $section_custom_classes = (!empty($instance['section_custom_classes'])) ? $this->remove_slashes_to_data_func(($instance['section_custom_classes'])) : '';
+
+
         $section_icon = $this->get_field_name('section_icon');
         $section_icon_attribuites = $this->get_field_name('section_icon_attribuites');
 
@@ -80,13 +87,13 @@ class Responsive_Section_Generator_Widget extends WP_Widget {
         $section_description_attributes = $this->get_field_name('section_description_attributes');
 
 
-        $serialize_icon = (!empty($instance['section_icon'])) ? unserialize($instance['section_icon']) : '';
-        $serialize_title = (!empty($instance['section_title'])) ? unserialize($instance['section_title']) : '';
-        $serialize_description = (!empty($instance['section_description'])) ? unserialize($instance['section_description']) : '';
+        $serialize_icon = (!empty($instance['section_icon'])) ? $this->remove_slashes_to_data_func(($instance['section_icon'])) : '';
+        $serialize_title = (!empty($instance['section_title'])) ? $this->remove_slashes_to_data_func(($instance['section_title'])) : '';
+        $serialize_description = (!empty($instance['section_description'])) ? $this->remove_slashes_to_data_func(($instance['section_description'])) : '';
 
-        $serialize_icon_attributes = (!empty($instance['section_icon_attribuites'])) ? unserialize($instance['section_icon_attribuites']) : '';
-        $serialize_title_attributes = (!empty($instance['section_title_attributes'])) ? unserialize($instance['section_title_attributes']) : '';
-        $serialize_description_attributes = (!empty($instance['section_description_attributes'])) ? unserialize($instance['section_description_attributes']) : '';
+        $serialize_icon_attributes = (!empty($instance['section_icon_attribuites'])) ? $this->remove_slashes_to_data_func($instance['section_icon_attribuites']) : '';
+        $serialize_title_attributes = (!empty($instance['section_title_attributes'])) ? $this->remove_slashes_to_data_func($instance['section_title_attributes']) : '';
+        $serialize_description_attributes = (!empty($instance['section_description_attributes'])) ? $this->remove_slashes_to_data_func($instance['section_description_attributes']) : '';
         /* End Section */
         ?>
 
@@ -135,27 +142,33 @@ class Responsive_Section_Generator_Widget extends WP_Widget {
                 ?>
                 <div class="section-<?php echo $i; ?>">
                     <div class="icon-section">
+                        <label><?php _e('Section ' . $counter . ' class :'); ?></label> 
+                        <select id="food" name="food" class="widefat" multiple="multiple">
+                            <?php echo $this->get_column_classes(); ?>
+                        </select>
+                    </div>
+                    <div class="icon-section">
                         <label><?php _e('Section ' . $counter . ' Icon :'); ?></label> 
                         <?php
                         $length = 10;
                         $randomString = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $length);
                         ?>
-                        <input class="widefat bt_class_<?php echo $randomString; ?>" name="<?php echo $section_icon; ?>[]" type="text" value="<?php echo $serialize_icon[$i]; ?>" />
+                        <input class="widefat bt_class_<?php echo $randomString; ?>" name="<?php echo $section_icon; ?>[]" type="text" value="<?php echo trim(htmlentities($serialize_icon[$i])); ?>" />
                         <strong>or</strong> <a href="#TB_inline?width=600&height=550&inlineId=component_choose_id" crosspond_textbox="bt_class_<?php echo $randomString; ?>" class="thickbox" title="Choose Icon">Choose Icon</a>
                         <div class="icon-attributes">
-                            <label>Attributes</label>
-                            <input class="" name="<?php echo $section_icon_attribuites; ?>[]" type="text" value="<?php echo $serialize_icon_attributes[$i]; ?> " />
+                            <label>Attributes :</label>
+                            <input class="" name="<?php echo $section_icon_attribuites; ?>[]" type="text" value="<?php echo trim(htmlentities($serialize_icon_attributes[$i])); ?>" />
                         </div>
                     </div>
                     <div class="icon-section">
                         <label><?php _e('Sections ' . $counter . ' Title :'); ?></label> 
-                        <input class="widefat" name="<?php echo $section_title; ?>[]" type="text" value="<?php echo $serialize_title[$i]; ?>">
-                        <div><label>Attributes</label> <input class="" name="<?php echo $section_title_attributes; ?>[]" type="text" value="<?php echo $serialize_title_attributes[$i]; ?>"></div>
+                        <input class="widefat" name="<?php echo $section_title; ?>[]" type="text" value="<?php echo trim(htmlentities($serialize_title[$i])); ?>">
+                        <div><label>Attributes :</label> <input class="" name="<?php echo $section_title_attributes; ?>[]" type="text" value="<?php echo trim(htmlentities($serialize_title_attributes[$i])); ?>"></div>
                     </div>
                     <div class="icon-section">
                         <label><?php _e('Sections ' . $counter . ' Description:'); ?></label> 
-                        <textarea rows="7" class="widefat" name="<?php echo $section_description; ?>[]" ><?php echo $serialize_description[$i]; ?></textarea>
-                        <div><label>Attributes</label> <input class="" name="<?php echo $section_description_attributes; ?>[]" type="text" value="<?php echo $serialize_description_attributes[$i]; ?>"></div>
+                        <textarea rows="7" class="widefat" name="<?php echo $section_description; ?>[]" ><?php echo trim(htmlentities($serialize_description[$i])); ?></textarea>
+                        <div><label>Attributes :</label> <input class="" name="<?php echo $section_description_attributes; ?>[]" type="text" value="<?php echo trim(htmlentities($serialize_description_attributes[$i])); ?>"></div>
 
                     </div>
                 </div>
@@ -187,21 +200,17 @@ class Responsive_Section_Generator_Widget extends WP_Widget {
         $instance['style'] = (!empty($new_instance['style']) ) ? $new_instance['style'] : '';
 
         /* Serialize section data */
-        $instance['section_icon'] = (!empty($new_instance['section_icon']) ) ? serialize($new_instance['section_icon']) : '';
-        $instance['section_title'] = (!empty($new_instance['section_title']) ) ? serialize($new_instance['section_title']) : '';
-        $instance['section_description'] = (!empty($new_instance['section_description']) ) ? serialize($new_instance['section_description']) : '';
+        $instance['section_icon'] = (!empty($new_instance['section_icon']) ) ? $this->add_slashes_to_data($new_instance['section_icon']) : '';
+        $instance['section_title'] = (!empty($new_instance['section_title']) ) ? $this->add_slashes_to_data($new_instance['section_title']) : '';
+        $instance['section_description'] = (!empty($new_instance['section_description']) ) ? $this->add_slashes_to_data($new_instance['section_description']) : '';
 
         //Store data for attributes
 
 
-        $instance['section_icon_attribuites'] = (!empty($new_instance['section_icon_attribuites']) ) ? serialize($new_instance['section_icon_attribuites']) : '';
-        $instance['section_title_attributes'] = (!empty($new_instance['section_title_attributes']) ) ? serialize($new_instance['section_title_attributes']) : '';
-        $instance['section_description_attributes'] = (!empty($new_instance['section_description_attributes']) ) ? serialize($new_instance['section_description_attributes']) : '';
+        $instance['section_icon_attribuites'] = (!empty($new_instance['section_icon_attribuites']) ) ? $this->add_slashes_to_data($new_instance['section_icon_attribuites']) : '';
+        $instance['section_title_attributes'] = (!empty($new_instance['section_title_attributes']) ) ? $this->add_slashes_to_data($new_instance['section_title_attributes']) : '';
+        $instance['section_description_attributes'] = (!empty($new_instance['section_description_attributes']) ) ? $this->add_slashes_to_data($new_instance['section_description_attributes']) : '';
 
-
-//            echo "<Pre>";
-//            print_r($instance);
-//            exit;
         /* End Serialize section data */
 
 
@@ -211,21 +220,36 @@ class Responsive_Section_Generator_Widget extends WP_Widget {
     public function add_slashes_to_data($arr) {
 
         $data_implode = implode("(#**#)", $arr);
-        $data_imploded_addcslashes = addslashes($data_implode);
-        $data_explode = explode("(#**#)", $data_imploded_addcslashes);
-
-        return serialize($data_explode);
+        $data_imploded_addslashes = addslashes($data_implode);
+        $data_explode = explode("(#**#)", $data_imploded_addslashes);
+        return trim(serialize($data_explode));
     }
 
-    public function remove_slashes_to_data($arr) {
+    public function remove_slashes_to_data_func($str) {
 
-
-
-        $unserialized_data = unserialize($arr);
+        $unserialized_data = unserialize($str);
         $data_implode = implode("(#**#)", $unserialized_data);
         $data_imploded_addcslashes = stripslashes($data_implode);
         $data_explode = explode("(#**#)", $data_imploded_addcslashes);
         return $data_explode;
+    }
+
+    function get_column_classes($selected_class = false) {
+
+        $bs_classes = apply_filters('responsive_column_classes_filter', false);
+        $options_html = '';
+        foreach ($bs_classes as $class_key => $class_value) {
+
+            $options_html .= "<optgroup label='$class_key'>";
+            if (is_array($class_value)) {
+                foreach ($class_value as $class) {
+                    $selected_html = ($class == $selected_class ) ? 'selected="selected"' : '';
+                    $options_html .= "<option value='$class' $selected_html>$class</option>";
+                }
+            }
+            $options_html .= '</optgroup>';
+        }
+        return $options_html;
     }
 
     public function get_components() {
