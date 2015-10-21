@@ -840,9 +840,9 @@
 	    cursor: pointer;
 }
 .icon-section {
-    margin: 20px 0;
-    background: #f6f6f6;
-    padding: 10px;
+    margin: 0;
+    /* background: #f6f6f6; */
+    padding: 10px 0 0 0;
     box-sizing: content-box;
 }
 .icon-section label {
@@ -857,5 +857,25 @@
 }
 .icon-attributes {
     margin-top: 5px;
+}
+
+.section {
+    border: 1px solid #e6e6e6;
+    padding: 0 10px;
+    margin-bottom: 10px;
+    box-shadow: 0px 3px 4px -1px rgba(0,0,0,.2);
+}
+.icon-section select {
+    min-height: 150px;
+}
+.icon-section optgroup {
+    border-bottom: 1px solid #e6e6e6;
+}
+.icon-section optgroup option {
+    border-bottom: 1px solid #e6e6e6;
+}
+h4.section-title {
+    margin: 10px 0 0px 0;
+    text-align: center;
 }
 /*# sourceMappingURL=bootstrap.css.map */

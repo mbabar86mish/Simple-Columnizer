@@ -74,9 +74,6 @@ class Responsive_Section_Generator_Widget extends WP_Widget {
 
         /* Section */
 
-
-
-
         $section_icon = $this->get_field_name('section_icon');
         $section_icon_attribuites = $this->get_field_name('section_icon_attribuites');
 
@@ -87,7 +84,6 @@ class Responsive_Section_Generator_Widget extends WP_Widget {
         $section_description_attributes = $this->get_field_name('section_description_attributes');
 
         $section_custom_classes = $this->get_field_name('section_custom_classes');
-
 
         $serialize_icon = (!empty($instance['section_icon'])) ? $this->remove_slashes_to_data_func(($instance['section_icon'])) : '';
         $serialize_title = (!empty($instance['section_title'])) ? $this->remove_slashes_to_data_func(($instance['section_title'])) : '';
@@ -106,11 +102,11 @@ class Responsive_Section_Generator_Widget extends WP_Widget {
         <?php echo $this->get_components(); ?>
 
         <p>
-            <label for="<?php echo $title_get_field_id; ?>"><?php _e('Title :'); ?></label> 
+            <label for="<?php echo $title_get_field_id; ?>"><?php _e('Widget Title :'); ?></label> 
             <input class="widefat" id="<?php echo $title_get_field_id; ?>" name="<?php echo $title_get_field_name; ?>" type="text" value="<?php echo esc_attr($title); ?>">
         </p>
         <p>
-            <label for="<?php echo $title_get_field_id; ?>"><?php _e('Total Sections :'); ?></label> 
+            <label for="<?php echo $title_get_field_id; ?>"><?php _e('Total Columns :'); ?></label> 
             <select class="widefat" name="<?php echo $section_get_field_name; ?>" id="<?php echo $section_get_field_id; ?>">
                 <?php for ($i = 0; $i < 12; $i++) { ?>
 
@@ -139,6 +135,7 @@ class Responsive_Section_Generator_Widget extends WP_Widget {
                     <option value="<?php echo $view_style[$i]; ?>" <?php echo $selected_option; ?> > <?php echo strtoupper($view_style[$i]); ?></option>
                 <?php } ?>
             </select>
+            <p><?php _e(' Note: Style will add html Tags to elements.'); ?></p>
         </p>
         <div id="element_form">
             <?php
@@ -147,33 +144,43 @@ class Responsive_Section_Generator_Widget extends WP_Widget {
                 $length = 10;
                 $randomString = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $length);
                 ?>
-                <div class="section-<?php echo $i; ?>">
+                <div class="section section-<?php echo $i; ?>">
+
+                    <h4 class="section-title">Colum <?php echo $counter; ?> : <?php echo $this->truncate(trim(htmlentities($serialize_title[$i])), 25); ?></h4>
                     <div class="icon-section">
-                        <label><?php _e($counter . '- class :'); ?></label> 
+                        <label><?php _e('Class :'); ?></label> 
                         <input type="hidden" name="<?php echo $section_custom_classes ?>[]"  class="hidden_class_<?php echo $randomString; ?>" value="<?php echo trim(htmlentities($serialize_section_custom_classes[$i])); ?>">
                         <select name="custom_classes[]" class="widefat bs_custom_classes" multiple="multiple"  hidden_textbox="hidden_class_<?php echo $randomString ?>">
                             <?php echo $this->get_column_classes($serialize_section_custom_classes[$i]); ?>
                         </select>
+                        <p><?php _e(' Note: Please hold Ctrl key for multiselect. If you did not select any class plugin automatically add class with respect to number of sections.'); ?></p>
                         <?php // echo trim(htmlentities($serialize_section_custom_classes[$i])); ?>
                     </div>
+
                     <div class="icon-section">
-                        <label><?php _e($counter . '- Icon :'); ?></label> 
-                        <input class="widefat bt_class_<?php echo $randomString; ?>" name="<?php echo $section_icon; ?>[]" type="text" value="<?php echo trim(htmlentities($serialize_icon[$i])); ?>" />
+                        <label><?php _e('Icon :'); ?></label> 
+                        <input placeholder="glyphicon glyphicon-phone" class="widefat bt_class_<?php echo $randomString; ?>" name="<?php echo $section_icon; ?>[]" type="text" value="<?php echo trim(htmlentities($serialize_icon[$i])); ?>" />
                         <strong>or</strong> <a href="#TB_inline?width=600&height=550&inlineId=component_choose_id" crosspond_textbox="bt_class_<?php echo $randomString; ?>" class="thickbox" title="Choose Icon">Choose Icon</a>
                         <div class="icon-attributes">
                             <label>Attributes :</label>
-                            <input class="" name="<?php echo $section_icon_attribuites; ?>[]" type="text" value="<?php echo trim(htmlentities($serialize_icon_attributes[$i])); ?>" />
+                            <input placeholder="class='thumbnail'" name="<?php echo $section_icon_attribuites; ?>[]" type="text" value="<?php echo trim(htmlentities($serialize_icon_attributes[$i])); ?>" />
                         </div>
                     </div>
                     <div class="icon-section">
-                        <label><?php _e($counter . '- Title :'); ?></label> 
-                        <input class="widefat" name="<?php echo $section_title; ?>[]" type="text" value="<?php echo trim(htmlentities($serialize_title[$i])); ?>">
-                        <div><label>Attributes :</label> <input class="" name="<?php echo $section_title_attributes; ?>[]" type="text" value="<?php echo trim(htmlentities($serialize_title_attributes[$i])); ?>"></div>
+                        <label><?php _e('Title :'); ?></label> 
+                        <input placeholder="Lorem Lipsim" class="widefat" name="<?php echo $section_title; ?>[]" type="text" value="<?php echo trim(htmlentities($serialize_title[$i])); ?>">
+                        <div>
+                            <label>Attributes :</label> 
+                            <input placeholder="class='caption'" class="" name="<?php echo $section_title_attributes; ?>[]" type="text" value="<?php echo trim(htmlentities($serialize_title_attributes[$i])); ?>">
+                        </div>
                     </div>
                     <div class="icon-section">
-                        <label><?php _e($counter . '- Description:'); ?></label> 
+                        <label><?php _e('Description:'); ?></label> 
                         <textarea rows="7" class="widefat" name="<?php echo $section_description; ?>[]" ><?php echo trim(htmlentities($serialize_description[$i])); ?></textarea>
-                        <div><label>Attributes :</label> <input class="" name="<?php echo $section_description_attributes; ?>[]" type="text" value="<?php echo trim(htmlentities($serialize_description_attributes[$i])); ?>"></div>
+                        <div>
+                            <label>Attributes :</label> 
+                            <input placeholder="class='alert alert-info'" class="" name="<?php echo $section_description_attributes; ?>[]" type="text" value="<?php echo trim(htmlentities($serialize_description_attributes[$i])); ?>">
+                        </div>
 
                     </div>
                 </div>
@@ -185,6 +192,10 @@ class Responsive_Section_Generator_Widget extends WP_Widget {
             ?>        
         </p>
         <?php
+    }
+
+    public function truncate($str, $width) {
+        return strtok(wordwrap($str, $width, "...\n"), "\n");
     }
 
     /**
