@@ -34,6 +34,7 @@ class Responsive_Section_Short_Code {
             $section_title = apply_filters('responsive_remove_slashes_to_data_filter', $section_value['section_title']);
             $section_description = apply_filters('responsive_remove_slashes_to_data_filter', $section_value['section_description']);
 
+            $section_custom_classes = apply_filters('responsive_remove_slashes_to_data_filter', $section_value['section_custom_classes']);
 
             $section_icon_attributes = apply_filters('responsive_remove_slashes_to_data_filter', $section_value['section_icon_attribuites']);
             $section_title_attributes = apply_filters('responsive_remove_slashes_to_data_filter', $section_value['section_title_attributes']);
@@ -41,12 +42,12 @@ class Responsive_Section_Short_Code {
 
 
 
-            $output .= $this->generate_section_html($section_icon, $section_icon_attributes, $section_title, $section_title_attributes, $section_description, $section_description_attributes, $section_value['style'], $section_value['section']);
+            $output .= $this->generate_section_html($section_icon, $section_icon_attributes, $section_title, $section_title_attributes, $section_description, $section_description_attributes, $section_value['style'], $section_value['section'], $section_custom_classes);
         }
         return $output;
     }
 
-    public function generate_section_html($section_icon, $section_icon_attributes, $section_title, $section_title_attributes, $section_description, $section_description_attributes, $selected_style, $selected_section) {
+    public function generate_section_html($section_icon, $section_icon_attributes, $section_title, $section_title_attributes, $section_description, $section_description_attributes, $selected_style, $selected_section, $section_custom_classes) {
         $html = '';
         //Get available styles //Default, Style
         $available_styles = apply_filters('responsive_style_filter', false);
@@ -60,7 +61,8 @@ class Responsive_Section_Short_Code {
 
                 $html .= (isset($available_styles[$selected_style]['container_wrapper_start']) && $available_styles[$selected_style]['container_wrapper_start'] != "") ? $available_styles[$selected_style]['container_wrapper_start'] : '';
                 for ($i = 0; $i < count($section_icon); $i++) {
-                    $html .='<div class="col-sm-' . $responsive_class . '">';
+                    $responsive_class = ($section_custom_classes[$i] != "") ? $section_custom_classes[$i] : 'col-sm-' . $responsive_class;
+                    $html .='<div class="' . $responsive_class . '">';
 
                     //For Icon
                     $html .= (isset($available_styles[$selected_style]['icon_wrapper_start']) && $available_styles[$selected_style]['icon_wrapper_start'] != "") ? str_replace("%s%", trim($section_icon_attributes[$i]), $available_styles[$selected_style]['icon_wrapper_start']) : '';
