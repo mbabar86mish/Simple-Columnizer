@@ -3,20 +3,20 @@
 /**
  * Adds Foo_Widget widget.
  */
-class Responsive_Section_Generator_Widget extends WP_Widget {
+class Simple_Columnizer_Widget extends WP_Widget {
 
     /**
      * Register widget with WordPress.
      */
     function __construct() {
         parent::__construct(
-                'responsive_widget', // Base ID
-                __('Responsive Section', 'responsive-section-generator-locale'), // Name
-                array('description' => __('A Responsive section generator', 'responsive-section-generator-locale'),) // Args
+                'columnizer_widget', // Base ID
+                __('Columnizer', 'simple-columnizer'), // Name
+                array('description' => __('A Column generator', 'simple-columnizer'),) // Args
         );
 
         //Filter to remove slashes 
-        add_filter('responsive_remove_slashes_to_data_filter', array($this, 'remove_slashes_to_data_func'));
+        add_filter('columnizer_remove_slashes_to_data_filter', array($this, 'remove_slashes_to_data_func'));
     }
 
     /**
@@ -32,7 +32,7 @@ class Responsive_Section_Generator_Widget extends WP_Widget {
         if (!empty($instance['title'])) {
             echo $args['before_title'] . apply_filters('widget_title', $instance['title']) . $args['after_title'];
         }
-        echo __('Responsive Section', 'responsive-section-generator-locale');
+        echo __('Columnizer', 'simple-columnizer');
         echo $args['after_widget'];
     }
 
@@ -49,11 +49,11 @@ class Responsive_Section_Generator_Widget extends WP_Widget {
         $exp_widget_id = explode("-", $this->get_field_id("widget_id"));
         $widget_id = intval($exp_widget_id[2]);
 
-        $output_widget_shortcode = (is_int($widget_id) && $widget_id != 0) ? 'Copy & Paste short-code <br> <strong>[responsive_section id="' . $widget_id . '"]</strong>' : 'You will get short-code after saving this widget';
+        $output_widget_shortcode = (is_int($widget_id) && $widget_id != 0) ? 'Copy & Paste short-code <br> <strong>[columnizer_section id="' . $widget_id . '"]</strong>' : 'You will get short-code after saving this widget';
 
 
         //Reterieve information
-        $title = !empty($instance['title']) ? $instance['title'] : __('Section title', 'responsive-section-generator-locale');
+        $title = !empty($instance['title']) ? $instance['title'] : __('Section title', 'simple-columnizer');
         $section = !empty($instance['section']) ? $instance['section'] : 1;
         $style = !empty($instance['style']) ? $instance['style'] : 'default';
 
@@ -122,7 +122,7 @@ class Responsive_Section_Generator_Widget extends WP_Widget {
             <label for="<?php echo $style_get_field_id; ?>"><?php _e('Select View Style :'); ?></label> 
             <?php
             //Get available styles //Default, Style
-            $available_styles = apply_filters('responsive_style_filter', false);
+            $available_styles = apply_filters('columnizer_style_filter', false);
             $view_style = array_keys($available_styles);
             $view_style_counter = count($view_style);
             ?>
@@ -263,7 +263,7 @@ class Responsive_Section_Generator_Widget extends WP_Widget {
         if ($selected_classes) {
             $selected_classes_array = explode(' ', $selected_classes);
         }
-        $bs_classes = apply_filters('responsive_column_classes_filter', false);
+        $bs_classes = apply_filters('columnizer_column_classes_filter', false);
         $options_html = '';
         foreach ($bs_classes as $class_key => $class_value) {
 

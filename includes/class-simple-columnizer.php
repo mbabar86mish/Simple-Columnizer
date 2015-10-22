@@ -1,6 +1,6 @@
 <?php
 
-class Responsive_Section_Generator {
+class Simple_Columnizer {
 
     protected $loader;
     protected $plugin_slug;
@@ -10,12 +10,12 @@ class Responsive_Section_Generator {
     public $total_section = 12;
 
     public function __construct() {
-        $this->plugin_slug = 'responsive-section-generator-slug';
-        $this->version = '0.1.0';
+        $this->plugin_slug = 'simple-columnizer';
+        $this->version = '1.0';
         //Filter to handle responsive section style
-        add_filter('responsive_style_filter', array($this, 'responsive_style_filter_func'));
-        add_filter('responsive_total_sections_filter', array($this, 'responsive_total_sections_filter_func'));
-        add_filter('responsive_column_classes_filter', array($this, 'responsive_column_classes_filter_func'));
+        add_filter('columnizer_style_filter', array($this, 'columnizer_style_filter_func'));
+        add_filter('columnizer_total_sections_filter', array($this, 'columnizer_total_sections_filter_func'));
+        add_filter('columnizer_column_classes_filter', array($this, 'columnizer_column_classes_filter_func'));
 
 
         $this->load_dependencies();
@@ -24,23 +24,23 @@ class Responsive_Section_Generator {
     }
 
     private function load_dependencies() {
-        require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-responsive-section-generator-admin.php';
-        require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-responsive-section-generator-widget.php';
-        require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-responsive-section-short-code.php';
-        require_once plugin_dir_path(__FILE__) . '/class-responsive-section-generator-loader.php';
-        $this->loader = new Responsive_Section_Generator_Loader();
+        require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-simple-columnizer-admin.php';
+        require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-simple-columnizer-widget.php';
+        require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-simple-columnizer-short-code.php';
+        require_once plugin_dir_path(__FILE__) . '/class-simple-columnizer-loader.php';
+        $this->loader = new Simple_Columnizer_Loader();
     }
 
     private function generate_shortcode() {
-        $shortcode = new Responsive_Section_Short_Code($this->get_version());
+        $shortcode = new Simple_Columnizer_Short_Code($this->get_version());
     }
 
     private function define_admin_hooks() {
-        $admin = new Responsive_Section_Generator_Admin($this->get_version());
+        $admin = new Simple_Columnizer_Admin($this->get_version());
         $this->loader->add_action('admin_enqueue_scripts', $admin, 'enqueue_styles');
         $this->loader->add_action('admin_enqueue_scripts', $admin, 'enqueue_script');
         $this->loader->add_action('widgets_init', $admin, 'section_widgets_init');
-        $this->loader->add_action('widgets_init', $admin, 'register_responsive_section_manager_widget');
+        $this->loader->add_action('widgets_init', $admin, 'register_columnizer_section_manager_widget');
     }
 
     public function run() {
@@ -51,7 +51,7 @@ class Responsive_Section_Generator {
         return $this->version;
     }
 
-    public function responsive_total_sections_filter_func($arg) {
+    public function columnizer_total_sections_filter_func($arg) {
         if (is_int($arg) && intval($arg) > 0) {
             $this->total_section = $arg;
         }
@@ -59,7 +59,7 @@ class Responsive_Section_Generator {
         return $this->total_section;
     }
 
-    public function responsive_column_classes_filter_func($arg) {
+    public function columnizer_column_classes_filter_func($arg) {
 
 
         $this->column_classes = array(
@@ -271,7 +271,7 @@ class Responsive_Section_Generator {
         return $this->column_classes;
     }
 
-    public function responsive_style_filter_func($arg) {
+    public function columnizer_style_filter_func($arg) {
 
         $this->section_style = array(
             'default' => array(

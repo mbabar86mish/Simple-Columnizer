@@ -1,6 +1,6 @@
 <?php
 
-class Responsive_Section_Generator_Loader {
+class Simple_Columnizer_Loader {
 
     protected $actions;
     protected $filters;

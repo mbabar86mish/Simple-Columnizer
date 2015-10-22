@@ -1,8 +1,8 @@
-=== Responsive Section Generator ===
+=== Simple Columnizer ===
 
 Contributors: Muhammad Babar
-Tags: responsive section generator, sections, elements, responsive, generator
-Requires at least: 3.5.1 & responsive libraries
+Tags: simple columnizer, column, section, responsive column, Box
+Requires at least: WP 3.5.1 & Bootstrap libraries
 Tested up to: 4.1.1
 Stable tag: 4.1.1
 License: GPLv2 or later
@@ -15,7 +15,7 @@ Responsive section generator create "Widget Area" in admin section with  "Drag &
 
 == Installation ==
 
-1. Upload `responsive-section-generator` to the `/wp-content/plugins/` directory
+1. Upload `simple-columnizer` to the `/wp-content/plugins/` directory
 1. Activate the plugin through the 'Plugins' menu in WordPress 
 
 == Frequently asked questions ==
@@ -30,6 +30,7 @@ An answer to that question.
 2. screenshot-2
 
 Q. How add new style
+
 Ans. 
 
 	$style2 = array(
@@ -48,4 +49,17 @@ Ans.
 	apply_filters('responsive_style_filter', $style2);
 	
 add in functions.php or in plugin file
-	
+
+Q. How add new style
+
+Ans
+	$column_classes = array(
+            "Custom Classes" => array(
+                'col-lg-1',
+                'col-lg-2'
+				)
+			
+			);
+apply_filters('columnizer_column_classes_filter', $column_classes);
+
+	add in functions.php or in plugin file

@@ -1,10 +1,10 @@
 <?php
 
-class Responsive_Section_Short_Code {
+class Simple_Columnizer_Short_Code {
 
     public function __construct() {
 
-        add_shortcode('responsive_section', array($this, 'shortcode'));
+        add_shortcode('columnizer_section', array($this, 'shortcode'));
     }
 
     public function shortcode($atts) {
@@ -13,9 +13,9 @@ class Responsive_Section_Short_Code {
             'id' => false,
                 ), $atts);
         //Get All widgets from our widget area.
-        $sections = get_option('widget_responsive_widget');
+        $sections = get_option('widget_columnizer_widget');
         if (!$sections) {
-            return "No Responsive section found!";
+            return "No Columnizer found!";
         }
 
 
@@ -30,15 +30,15 @@ class Responsive_Section_Short_Code {
         if (is_array($section_value) && array_key_exists('style', $section_value)) {
             //Generate HTML for sections
 
-            $section_icon = apply_filters('responsive_remove_slashes_to_data_filter', $section_value['section_icon']);
-            $section_title = apply_filters('responsive_remove_slashes_to_data_filter', $section_value['section_title']);
-            $section_description = apply_filters('responsive_remove_slashes_to_data_filter', $section_value['section_description']);
+            $section_icon = apply_filters('columnizer_remove_slashes_to_data_filter', $section_value['section_icon']);
+            $section_title = apply_filters('columnizer_remove_slashes_to_data_filter', $section_value['section_title']);
+            $section_description = apply_filters('columnizer_remove_slashes_to_data_filter', $section_value['section_description']);
 
-            $section_custom_classes = apply_filters('responsive_remove_slashes_to_data_filter', $section_value['section_custom_classes']);
+            $section_custom_classes = apply_filters('columnizer_remove_slashes_to_data_filter', $section_value['section_custom_classes']);
 
-            $section_icon_attributes = apply_filters('responsive_remove_slashes_to_data_filter', $section_value['section_icon_attribuites']);
-            $section_title_attributes = apply_filters('responsive_remove_slashes_to_data_filter', $section_value['section_title_attributes']);
-            $section_description_attributes = apply_filters('responsive_remove_slashes_to_data_filter', $section_value['section_description_attributes']);
+            $section_icon_attributes = apply_filters('columnizer_remove_slashes_to_data_filter', $section_value['section_icon_attribuites']);
+            $section_title_attributes = apply_filters('columnizer_remove_slashes_to_data_filter', $section_value['section_title_attributes']);
+            $section_description_attributes = apply_filters('columnizer_remove_slashes_to_data_filter', $section_value['section_description_attributes']);
 
 
 
@@ -50,19 +50,19 @@ class Responsive_Section_Short_Code {
     public function generate_section_html($section_icon, $section_icon_attributes, $section_title, $section_title_attributes, $section_description, $section_description_attributes, $selected_style, $selected_section, $section_custom_classes) {
         $html = '';
         //Get available styles //Default, Style
-        $available_styles = apply_filters('responsive_style_filter', false);
+        $available_styles = apply_filters('columnizer_style_filter', false);
         //Get Total section // 12
-        $total_sections = apply_filters('responsive_total_sections_filter', false);
-        //Generate Responsive Class Eg: col-sm-6
-        $responsive_class = intval($total_sections / $selected_section);
-
+        $total_sections = apply_filters('columnizer_total_sections_filter', false);
+        //Generate Columnizer Class Eg: col-sm-6
+        $columnizer_class_column = intval($total_sections / $selected_section);
+        $columnizer_class = "col-sm-$columnizer_class_column "."col-md-$columnizer_class_column "."col-lg-$columnizer_class_column "."col-xs-$columnizer_class_column ";
         if (is_array($available_styles)) {
             if (array_key_exists($selected_style, $available_styles)) {
-
+                
                 $html .= (isset($available_styles[$selected_style]['container_wrapper_start']) && $available_styles[$selected_style]['container_wrapper_start'] != "") ? $available_styles[$selected_style]['container_wrapper_start'] : '';
                 for ($i = 0; $i < count($section_icon); $i++) {
-                    $responsive_class = ($section_custom_classes[$i] != "") ? $section_custom_classes[$i] : 'col-sm-' . $responsive_class;
-                    $html .='<div class="' . $responsive_class . '">';
+                    $columnizer_class = (trim($section_custom_classes[$i]) != "") ? $section_custom_classes[$i] :  $columnizer_class;
+                    $html .='<div class="' . $columnizer_class . '">';
 
                     //For Icon
                     $html .= (isset($available_styles[$selected_style]['icon_wrapper_start']) && $available_styles[$selected_style]['icon_wrapper_start'] != "") ? str_replace("%s%", trim($section_icon_attributes[$i]), $available_styles[$selected_style]['icon_wrapper_start']) : '';
