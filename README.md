@@ -53,12 +53,12 @@ add in functions.php or in plugin file
 Q. How add new style
 
 Ans
+
 	$column_classes = array(
             "Custom Classes" => array(
                 'col-lg-1',
                 'col-lg-2'
 				)
-			
 			);
 apply_filters('columnizer_column_classes_filter', $column_classes);
 
